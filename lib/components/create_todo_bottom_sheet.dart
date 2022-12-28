@@ -46,6 +46,7 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
                   icon: Icon(Icons.description),
                   hintText: '新しいタスクを追加しましょう。',
                 ),
+                autofocus: true,
               ),
             ),
             const SizedBox(height: 16),

@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../components/index.dart';
 
-class TodoHomePage extends StatefulWidget {
-  const TodoHomePage({Key? key}) : super(key: key);
+class TodoHomePage extends StatelessWidget {
+  TodoHomePage({super.key});
 
-  @override
-  State<TodoHomePage> createState() => _TodoHomePageState();
-}
-
-class _TodoHomePageState extends State<TodoHomePage> {
   final _todoListViewKey = GlobalKey<TodoListViewState>();
 
   @override

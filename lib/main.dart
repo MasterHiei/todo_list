@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Todo list',
       theme: ThemeData.light(),
-      home: const TodoHomePage(),
+      home: TodoHomePage(),
     );
   }
 }
