@@ -37,9 +37,10 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextField(
                 controller: _controller,
                 decoration: const InputDecoration(
@@ -50,25 +51,20 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            TextButton(
+            TextButton.icon(
               onPressed: () {},
-              child: Row(
-                children: [
-                  const Icon(Icons.today),
-                  const SizedBox(width: 12),
-                  Text(DateTime.now().toString()),
-                ],
-              ),
+              icon: const Icon(Icons.today),
+              label: Text(DateTime.now().toString()),
             ),
-            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                ElevatedButton(
                   onPressed: _onCreate,
                   child: const Text('追加'),
                 ),
-                TextButton(
+                const SizedBox(width: 12),
+                ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('キャンセル'),
                 ),
