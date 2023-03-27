@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/todo_item.dart';
-import 'todo_list_view.dart';
+import '../providers/todos_provider.dart';
 
 class CreateTodoBottomSheet extends StatefulWidget {
-  const CreateTodoBottomSheet({
-    super.key,
-    required this.todoListViewKey,
-  });
-
-  final GlobalKey<TodoListViewState> todoListViewKey;
+  const CreateTodoBottomSheet({super.key});
 
   @override
   State<CreateTodoBottomSheet> createState() => _CreateTodoBottomSheetState();
@@ -59,9 +55,11 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
-                  onPressed: _onCreate,
-                  child: const Text('追加'),
+                Consumer(
+                  builder: (_, ref, __) => ElevatedButton(
+                    onPressed: () => _onCreate(ref),
+                    child: const Text('追加'),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
@@ -76,7 +74,7 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
     );
   }
 
-  void _onCreate() {
+  void _onCreate(WidgetRef ref) {
     final contents = _controller.text;
     if (contents.isEmpty) {
       return;
@@ -85,7 +83,7 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
       contents: contents,
       date: DateTime.now(),
     );
-    widget.todoListViewKey.currentState?.add(todo);
+    ref.read(todosProvider.notifier).add(todo);
     _controller.clear();
     Navigator.pop(context);
   }
