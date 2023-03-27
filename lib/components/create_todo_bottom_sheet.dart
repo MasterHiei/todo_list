@@ -1,24 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/todo_item.dart';
+import '../providers/create_todo_provider.dart';
 import '../providers/todos_provider.dart';
 
-class CreateTodoBottomSheet extends StatefulWidget {
+class CreateTodoBottomSheet extends StatelessWidget {
   const CreateTodoBottomSheet({super.key});
-
-  @override
-  State<CreateTodoBottomSheet> createState() => _CreateTodoBottomSheetState();
-}
-
-class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
-  final _controller = TextEditingController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +22,22 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.description),
-                  hintText: '新しいタスクを追加しましょう。',
-                ),
-                autofocus: true,
-              ),
+            Consumer(
+              builder: (_, ref, __) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: TextField(
+                    controller: ref
+                        .watch(createTodoProvider.notifier)
+                        .contentsController,
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.description),
+                      hintText: '新しいタスクを追加しましょう。',
+                    ),
+                    autofocus: true,
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16),
             TextButton.icon(
@@ -57,7 +50,8 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
               children: [
                 Consumer(
                   builder: (_, ref, __) => ElevatedButton(
-                    onPressed: () => _onCreate(ref),
+                    onPressed: () =>
+                        ref.read(todosProvider.notifier).add(context),
                     child: const Text('追加'),
                   ),
                 ),
@@ -72,19 +66,5 @@ class _CreateTodoBottomSheetState extends State<CreateTodoBottomSheet> {
         ),
       ),
     );
-  }
-
-  void _onCreate(WidgetRef ref) {
-    final contents = _controller.text;
-    if (contents.isEmpty) {
-      return;
-    }
-    final todo = TodoItem(
-      contents: contents,
-      date: DateTime.now(),
-    );
-    ref.read(todosProvider.notifier).add(todo);
-    _controller.clear();
-    Navigator.pop(context);
   }
 }
