@@ -84,8 +84,8 @@ class __$$_EmptyCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Empty implements _Empty {
-  const _$_Empty();
+class _$_Empty extends _Empty {
+  const _$_Empty() : super._();
 
   @override
   String toString() {
@@ -158,6 +158,7 @@ class _$_Empty implements _Empty {
   }
 }
 
-abstract class _Empty implements ValueFailure {
+abstract class _Empty extends ValueFailure {
   const factory _Empty() = _$_Empty;
+  const _Empty._() : super._();
 }

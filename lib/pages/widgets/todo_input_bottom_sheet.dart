@@ -38,22 +38,24 @@ class TodoInputBottomSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Consumer(
-              builder: (_, ref, __) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: TextFormField(
-                    initialValue: ref.watch(_todoProvider).contents,
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.description),
-                      hintText: '新しいタスクを追加しましょう',
-                    ),
-                    autofocus: true,
-                    maxLines: null,
-                    onChanged:
-                        ref.read(_todoProvider.notifier).onContentsChanged,
+              builder: (_, ref, __) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: TextFormField(
+                  initialValue: ref.watch(_todoProvider).contents,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.description),
+                    hintText: '新しいタスクを追加しましょう',
                   ),
-                );
-              },
+                  autofocus: true,
+                  maxLines: null,
+                  onChanged: ref.read(_todoProvider.notifier).onContentsChanged,
+                  validator: (_) =>
+                      ref.read(_todoProvider).failureOrContents.fold(
+                            (failure) => failure.message,
+                            (_) => null,
+                          ),
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             Consumer(
