@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/todo_item.dart';
-import 'create_todo_provider.dart';
 
 part 'todos_provider.g.dart';
 
@@ -11,8 +10,11 @@ class Todos extends _$Todos {
   @override
   List<TodoItem> build() => [];
 
-  void add(BuildContext context) {
-    final contents = ref.watch(createTodoProvider.notifier).contents;
+  void add(
+    BuildContext context,
+    TextEditingController contentsController,
+  ) {
+    final contents = contentsController.text;
     if (contents.isEmpty) {
       return;
     }
@@ -21,7 +23,7 @@ class Todos extends _$Todos {
       date: DateTime.now(),
     );
     state = [...state, todo];
-    ref.watch(createTodoProvider.notifier).clear();
+    contentsController.clear();
     Navigator.pop(context);
   }
 }
