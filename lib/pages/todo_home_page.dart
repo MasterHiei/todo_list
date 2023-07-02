@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../components/index.dart';
+import 'widgets/index.dart';
 
 class TodoHomePage extends StatelessWidget {
   const TodoHomePage({super.key});
@@ -20,7 +20,7 @@ class TodoHomePage extends StatelessWidget {
   Future<void> _showCreateTodoBottomSheet(BuildContext context) =>
       showModalBottomSheet(
         context: context,
-        builder: (_) => const CreateTodoBottomSheet(),
+        builder: (_) => const TodoInputBottomSheet(),
         isScrollControlled: true,
         isDismissible: false,
       );
