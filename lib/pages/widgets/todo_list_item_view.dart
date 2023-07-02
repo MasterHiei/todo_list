@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../models/todo_item.dart';
+import '../../collections/todo.dart';
+import '../../core/failures/extensions/date_time_format.dart';
+import '../../entities/unsaved_todo.dart';
+import 'todo_input_bottom_sheet.dart';
 
 class TodoListItemView extends StatelessWidget {
   const TodoListItemView(this.data, {super.key});
 
-  final TodoItem data;
+  final Todo data;
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +18,18 @@ class TodoListItemView extends StatelessWidget {
         value: data.isCompleted,
       ),
       title: Text(data.contents),
-      subtitle: Text(data.date.toString()),
-      onTap: () {
-        debugPrint('33333');
-      },
+      subtitle: Text(data.deadline.toMMMEdHmString()),
+      onTap: () => _showModifyTodoBottomSheet(context),
     );
   }
+
+  Future<void> _showModifyTodoBottomSheet(BuildContext context) =>
+      showModalBottomSheet(
+        context: context,
+        builder: (_) => TodoInputBottomSheet(
+          initialData: UnsavedTodo.fromSaved(data),
+        ),
+        isScrollControlled: true,
+        isDismissible: false,
+      );
 }

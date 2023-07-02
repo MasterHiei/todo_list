@@ -20,7 +20,7 @@ class TodoHomePage extends StatelessWidget {
   Future<void> _showCreateTodoBottomSheet(BuildContext context) =>
       showModalBottomSheet(
         context: context,
-        builder: (_) => const CreateTodoBottomSheet(),
+        builder: (_) => const TodoInputBottomSheet(),
         isScrollControlled: true,
         isDismissible: false,
       );

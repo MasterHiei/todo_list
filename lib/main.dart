@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'pages/todo_home_page.dart';
+import 'services/clients/isar_provider.dart';
 
-void main() => runApp(const ProviderScope(child: TodoApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Intl.defaultLocale = 'ja_JP';
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        await isarOverride(),
+      ],
+      child: const TodoApp(),
+    ),
+  );
+}
 
 class TodoApp extends StatelessWidget {
   const TodoApp({super.key});
@@ -13,6 +29,10 @@ class TodoApp extends StatelessWidget {
     return MaterialApp(
       title: 'Todo list',
       theme: ThemeData.light(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('ja', 'JP')],
       home: const TodoHomePage(),
     );
   }
