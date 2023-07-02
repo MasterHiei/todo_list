@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../components/index.dart';
+import 'widgets/index.dart';
 
 class TodoHomePage extends StatelessWidget {
   const TodoHomePage({super.key});

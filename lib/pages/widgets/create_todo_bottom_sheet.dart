@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/todos_provider.dart';
+import '../../providers/todos_provider.dart';
 
 class CreateTodoBottomSheet extends StatefulWidget {
   const CreateTodoBottomSheet({Key? key}) : super(key: key);
