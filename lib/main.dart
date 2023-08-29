@@ -31,9 +31,11 @@ class TodoApp extends StatelessWidget {
       theme: ThemeData.light(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ja', 'JP')],
       home: const TodoHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

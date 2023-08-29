@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 
 import '../collections/todo.dart';
 import '../core/failures/value_failure.dart';
+import 'saved_todo.dart';
 
 part 'unsaved_todo.freezed.dart';
 
@@ -15,7 +16,7 @@ class UnsavedTodo with _$UnsavedTodo {
     DateTime? deadline,
   }) = _UnsavedTodo;
 
-  factory UnsavedTodo.fromSaved(Todo todo) => UnsavedTodo(
+  factory UnsavedTodo.from(SavedTodo todo) => UnsavedTodo(
         id: todo.id,
         contents: todo.contents,
         deadline: todo.deadline,

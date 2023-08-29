@@ -4,10 +4,10 @@ import '../../entities/unsaved_todo.dart';
 import '../../services/todos_service.dart';
 import '../incomplete_todos_provider.dart';
 
-part 'todo_provider.g.dart';
+part 'draft_todo_provider.g.dart';
 
 @riverpod
-class Todo extends _$Todo {
+class DraftTodo extends _$DraftTodo {
   @override
   UnsavedTodo build(UnsavedTodo initialValue) => initialValue;
 

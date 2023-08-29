@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/failures/extensions/date_time_format.dart';
 import '../../entities/unsaved_todo.dart';
-import '../../providers/todo/todo_provider.dart';
+import '../../providers/todo/draft_todo_provider.dart';
 
 class TodoInputBottomSheet extends StatelessWidget {
   const TodoInputBottomSheet({
@@ -13,7 +13,7 @@ class TodoInputBottomSheet extends StatelessWidget {
 
   final UnsavedTodo initialData;
 
-  TodoProvider get _todoProvider => todoProvider(initialData);
+  DraftTodoProvider get _draftTodoProvider => draftTodoProvider(initialData);
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +41,17 @@ class TodoInputBottomSheet extends StatelessWidget {
               builder: (_, ref, __) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: TextFormField(
-                  initialValue: ref.watch(_todoProvider).contents,
+                  initialValue: ref.watch(_draftTodoProvider).contents,
                   decoration: const InputDecoration(
                     icon: Icon(Icons.description),
                     hintText: '新しいタスクを追加しましょう',
                   ),
                   autofocus: true,
                   maxLines: null,
-                  onChanged: ref.read(_todoProvider.notifier).onContentsChanged,
+                  onChanged:
+                      ref.read(_draftTodoProvider.notifier).onContentsChanged,
                   validator: (_) =>
-                      ref.read(_todoProvider).failureOrContents.fold(
+                      ref.read(_draftTodoProvider).failureOrContents.fold(
                             (failure) => failure.message,
                             (_) => null,
                           ),
@@ -60,7 +61,7 @@ class TodoInputBottomSheet extends StatelessWidget {
             const SizedBox(height: 16),
             Consumer(
               builder: (_, ref, __) {
-                final deadline = ref.watch(_todoProvider).deadline;
+                final deadline = ref.watch(_draftTodoProvider).deadline;
                 return TextButton.icon(
                   onPressed: () async {
                     final selectedDate = await showDatePicker(
@@ -70,7 +71,7 @@ class TodoInputBottomSheet extends StatelessWidget {
                       lastDate: DateTime.now().add(const Duration(days: 365)),
                     );
                     ref
-                        .read(_todoProvider.notifier)
+                        .read(_draftTodoProvider.notifier)
                         .selectDeadline(selectedDate);
                   },
                   icon: const Icon(Icons.today),
@@ -87,7 +88,7 @@ class TodoInputBottomSheet extends StatelessWidget {
               children: [
                 Consumer(
                   builder: (_, ref, __) => ElevatedButton(
-                    onPressed: ref.watch(_todoProvider).isValid
+                    onPressed: ref.watch(_draftTodoProvider).isValid
                         ? () => _save(context, ref)
                         : null,
                     child: const Text('保存'),
@@ -105,7 +106,7 @@ class TodoInputBottomSheet extends StatelessWidget {
       );
 
   void _save(BuildContext context, WidgetRef ref) {
-    ref.read(_todoProvider.notifier).save();
+    ref.read(_draftTodoProvider.notifier).save();
     Navigator.pop(context);
   }
 }
