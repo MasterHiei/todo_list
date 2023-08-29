@@ -86,6 +86,11 @@ class TodoInputBottomSheet extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('キャンセル'),
+                ),
+                const SizedBox(width: 12),
                 Consumer(
                   builder: (_, ref, __) => ElevatedButton(
                     onPressed: ref.watch(_draftTodoProvider).isValid
@@ -94,19 +99,16 @@ class TodoInputBottomSheet extends StatelessWidget {
                     child: const Text('保存'),
                   ),
                 ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('キャンセル'),
-                ),
               ],
             ),
           ],
         ),
       );
 
-  void _save(BuildContext context, WidgetRef ref) {
-    ref.read(_draftTodoProvider.notifier).save();
-    Navigator.pop(context);
+  Future<void> _save(BuildContext context, WidgetRef ref) async {
+    await ref.read(_draftTodoProvider.notifier).save();
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
   }
 }

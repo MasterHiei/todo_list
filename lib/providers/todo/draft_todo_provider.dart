@@ -2,7 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../entities/unsaved_todo.dart';
 import '../../services/todos_service.dart';
-import '../incomplete_todos_provider.dart';
 
 part 'draft_todo_provider.g.dart';
 
@@ -28,7 +27,5 @@ class DraftTodo extends _$DraftTodo {
       return;
     }
     await _service.insertOrUpdate(state.toCollection());
-
-    ref.invalidate(incompleteTodosProvider);
   }
 }

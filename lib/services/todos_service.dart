@@ -7,7 +7,7 @@ import 'clients/isar_provider.dart';
 part 'todos_service.g.dart';
 
 abstract class ITodosService {
-  Future<List<Todo>> findAll({bool isCompleted});
+  Stream<List<Todo>> watch({required bool isCompleted});
 
   Future<void> insertOrUpdate(Todo todo);
 
@@ -22,14 +22,12 @@ class TodosService extends _$TodosService implements ITodosService {
   Isar get _isar => ref.watch(isarProvider);
 
   @override
-  Future<List<Todo>> findAll({
-    bool isCompleted = false,
-  }) =>
-      _isar.todos
-          .filter()
-          .isCompletedEqualTo(isCompleted)
-          .sortByDeadline()
-          .findAll();
+  Stream<List<Todo>> watch({required bool isCompleted}) => _isar.todos
+      .filter()
+      .isCompletedEqualTo(isCompleted)
+      .sortByDeadline()
+      .build()
+      .watch(fireImmediately: true);
 
   @override
   Future<void> insertOrUpdate(Todo todo) =>

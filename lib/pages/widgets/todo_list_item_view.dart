@@ -17,7 +17,7 @@ class TodoListItemView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
-      key: UniqueKey(),
+      key: ValueKey(data.id),
       background: Container(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -45,7 +45,7 @@ class TodoListItemView extends ConsumerWidget {
       onDismissed: (direction) {
         switch (direction) {
           case DismissDirection.endToStart:
-            break;
+            _complete(ref);
 
           case DismissDirection.startToEnd:
             _remove(ref);
@@ -110,6 +110,9 @@ class TodoListItemView extends ConsumerWidget {
         isDismissible: false,
       );
 
-  void _remove(WidgetRef ref) =>
+  Future<void> _complete(WidgetRef ref) =>
+      ref.read(_payloadTodoProvider.notifier).complete();
+
+  Future<void> _remove(WidgetRef ref) =>
       ref.read(_payloadTodoProvider.notifier).remove();
 }
