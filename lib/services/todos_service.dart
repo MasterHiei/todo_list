@@ -6,18 +6,23 @@ import 'clients/isar_provider.dart';
 
 part 'todos_service.g.dart';
 
+@riverpod
+TodosService todosService(TodosServiceRef ref) => TodosService(ref);
+
 abstract class ITodosService {
   Stream<List<Todo>> watch({required bool isCompleted});
 
   Future<void> insertOrUpdate(Todo todo);
 
-  Future<void> remove(Todo todo);
+  Future<void> delete(Todo todo);
+
+  Future<void> deleteAll(List<Id> ids);
 }
 
-@riverpod
-class TodosService extends _$TodosService implements ITodosService {
-  @override
-  void build() {}
+class TodosService implements ITodosService {
+  const TodosService(this.ref);
+
+  final TodosServiceRef ref;
 
   Isar get _isar => ref.watch(isarProvider);
 
@@ -34,6 +39,10 @@ class TodosService extends _$TodosService implements ITodosService {
       _isar.writeTxn(() => _isar.todos.put(todo));
 
   @override
-  Future<void> remove(Todo todo) =>
+  Future<void> delete(Todo todo) =>
       _isar.writeTxn(() => _isar.todos.delete(todo.id));
+
+  @override
+  Future<void> deleteAll(List<Id> ids) =>
+      _isar.writeTxn(() => _isar.todos.deleteAll(ids));
 }

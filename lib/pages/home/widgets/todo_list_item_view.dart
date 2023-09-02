@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/failures/extensions/date_time_format.dart';
-import '../../entities/saved_todo.dart';
-import '../../entities/unsaved_todo.dart';
-import '../../providers/todo/payload_todo_provider.dart';
-import 'todo_input_bottom_sheet.dart';
+import '../../../core/extensions/date_time_format.dart';
+import '../../../entities/saved_todo.dart';
+import '../../../entities/unsaved_todo.dart';
+import '../../../providers/todo/payload_todo_provider.dart';
+import '../../../providers/todos/todos_batch_delete_provider.dart';
+import '../../widgets/index.dart';
+import 'index.dart';
 
 class TodoListItemView extends ConsumerWidget {
   const TodoListItemView(this.data, {super.key});
@@ -13,6 +15,9 @@ class TodoListItemView extends ConsumerWidget {
   final SavedTodo data;
 
   PayloadTodoProvider get _payloadTodoProvider => payloadTodoProvider(data);
+
+  ProviderListenable<bool> get _batchDeleteEnabled =>
+      todosBatchDeleteProvider.select((state) => state.enabled);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +41,7 @@ class TodoListItemView extends ConsumerWidget {
             return true;
 
           case DismissDirection.startToEnd:
-            return await _showConfirmRemoveBottomSheet(context);
+            return await _showConfirmDeleteBottomSheet(context);
 
           default:
             return false;
@@ -48,56 +53,50 @@ class TodoListItemView extends ConsumerWidget {
             _complete(ref);
 
           case DismissDirection.startToEnd:
-            _remove(ref);
+            _delete(ref);
 
           default:
             break;
         }
       },
+      direction: ref.watch(_batchDeleteEnabled)
+          ? DismissDirection.none
+          : DismissDirection.horizontal,
       child: _buildItem(context),
     );
   }
 
-  Widget _buildItem(BuildContext context) => ListTile(
-        leading: Checkbox(
-          onChanged: (_) {},
-          value: data.isCompleted,
+  Widget _buildItem(BuildContext context) => Consumer(
+        builder: (_, ref, __) => ListTile(
+          leading: ref.watch(_batchDeleteEnabled)
+              ? Consumer(
+                  builder: (_, ref, __) {
+                    return Checkbox(
+                      onChanged: (_) {},
+                      value: ref.watch(
+                        todosBatchDeleteProvider.select(
+                          (state) => state.isChecked(data.id),
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : null,
+          title: Text(data.contents),
+          subtitle: Text(data.deadline.toMMMEdHmString()),
+          onTap: () => ref.watch(_batchDeleteEnabled)
+              ? ref.read(todosBatchDeleteProvider.notifier).check(data.id)
+              : _showModifyBottomSheet(context),
+          onLongPress: ref.watch(_batchDeleteEnabled)
+              ? null
+              : ref.read(todosBatchDeleteProvider.notifier).enable,
         ),
-        title: Text(data.contents),
-        subtitle: Text(data.deadline.toMMMEdHmString()),
-        onTap: () => _showModifyBottomSheet(context),
       );
 
-  Future<bool?> _showConfirmRemoveBottomSheet(BuildContext context) =>
+  Future<bool?> _showConfirmDeleteBottomSheet(BuildContext context) =>
       showModalBottomSheet(
         context: context,
-        builder: (context) => Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.amber,
-                backgroundColor: Colors.red,
-              ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Text(
-                  '削除',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Text('キャンセル'),
-              ),
-            ),
-          ],
-        ),
+        builder: (_) => const TodoConfirmDeleteBottomSheet(),
       );
 
   Future<void> _showModifyBottomSheet(BuildContext context) =>
@@ -113,6 +112,6 @@ class TodoListItemView extends ConsumerWidget {
   Future<void> _complete(WidgetRef ref) =>
       ref.read(_payloadTodoProvider.notifier).complete();
 
-  Future<void> _remove(WidgetRef ref) =>
-      ref.read(_payloadTodoProvider.notifier).remove();
+  Future<void> _delete(WidgetRef ref) =>
+      ref.read(_payloadTodoProvider.notifier).delete();
 }

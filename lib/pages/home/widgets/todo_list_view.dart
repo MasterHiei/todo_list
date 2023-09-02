@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../entities/saved_todo.dart';
-import '../../providers/todos_provider.dart';
+import '../../../entities/saved_todo.dart';
+import '../../../providers/todos/todos_provider.dart';
 import 'todo_list_item_view.dart';
 
 class TodoListView extends ConsumerWidget {
@@ -18,7 +18,9 @@ class TodoListView extends ConsumerWidget {
               itemCount: items.length,
             );
           },
-          error: (_, __) => const Center(child: Text('Error!!!')),
+          error: (_, __) => const Center(
+            child: Text('Something went wrong...'),
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
         );
   }

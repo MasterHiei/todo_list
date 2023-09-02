@@ -11,9 +11,9 @@ class PayloadTodo extends _$PayloadTodo {
   SavedTodo build(SavedTodo target) => target;
 
   Future<void> complete() => ref
-      .read(todosServiceProvider.notifier)
+      .read(todosServiceProvider)
       .insertOrUpdate(state.toCollection()..isCompleted = true);
 
-  Future<void> remove() =>
-      ref.read(todosServiceProvider.notifier).remove(state.toCollection());
+  Future<void> delete() =>
+      ref.read(todosServiceProvider).delete(state.toCollection());
 }
