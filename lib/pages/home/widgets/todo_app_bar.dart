@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../providers/todos/todos_batch_delete_provider.dart';
@@ -19,17 +18,28 @@ class TodoAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ? const Text('Batch Delete')
           : const Text('Simple To-Do List'),
       actions: [
-        IconButton(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          icon: batchDeleteEnabled
-              ? const Icon(FontAwesomeIcons.xmark)
-              : const Icon(FontAwesomeIcons.githubAlt),
-          onPressed: batchDeleteEnabled
-              ? ref.read(todosBatchDeleteProvider.notifier).disbale
-              : () => launchUrl(
-                    Uri.parse('https://github.com/MasterHiei/todo_list'),
-                  ),
-        ),
+        if (!batchDeleteEnabled)
+          IconButton(
+            tooltip: 'ソースコード',
+            icon: const Icon(Icons.code),
+            onPressed: () => launchUrl(
+              Uri.parse('https://github.com/MasterHiei/todo_list'),
+            ),
+          ),
+        if (!batchDeleteEnabled)
+          IconButton(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            tooltip: 'アーカイブ',
+            icon: const Icon(Icons.archive_outlined),
+            onPressed: () {},
+          ),
+        if (batchDeleteEnabled)
+          IconButton(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            tooltip: '取消',
+            icon: const Icon(Icons.close),
+            onPressed: ref.read(todosBatchDeleteProvider.notifier).disbale,
+          ),
       ],
       backgroundColor: batchDeleteEnabled ? Colors.red : null,
     );

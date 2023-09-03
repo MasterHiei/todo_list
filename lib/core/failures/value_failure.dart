@@ -9,6 +9,6 @@ sealed class ValueFailure with _$ValueFailure {
   const ValueFailure._();
 
   String get message => map(
-        empty: (_) => '値を入力してください。',
+        empty: (_) => '値は必須です。',
       );
 }

@@ -15,7 +15,7 @@ class DraftTodo extends _$DraftTodo {
   void onContentsChanged(String contents) =>
       state = state.copyWith(contents: contents);
 
-  void selectDeadline(DateTime? deadline) {
+  void setDeadline(DateTime? deadline) {
     if (deadline == null) {
       return;
     }

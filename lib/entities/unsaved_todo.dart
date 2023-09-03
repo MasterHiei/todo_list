@@ -26,6 +26,11 @@ class UnsavedTodo with _$UnsavedTodo {
 
   bool get isValid => failureOrContents.isRight && failureOrDeadline.isRight;
 
+  String? get errorMessage => failureOrContents.fold(
+        (failure) => failure.message,
+        (_) => null,
+      );
+
   Either<ValueFailure, String> get failureOrContents {
     if (contents.isEmpty) {
       return const Left(ValueFailure.empty());
