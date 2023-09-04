@@ -3,7 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
 import '../collections/todo.dart';
-import '../core/failures/value_failure.dart';
+import '../../core/failures/value_failure.dart';
+import 'saved_todo.dart';
 
 part 'unsaved_todo.freezed.dart';
 
@@ -15,7 +16,7 @@ class UnsavedTodo with _$UnsavedTodo {
     DateTime? deadline,
   }) = _UnsavedTodo;
 
-  factory UnsavedTodo.fromSaved(Todo todo) => UnsavedTodo(
+  factory UnsavedTodo.from(SavedTodo todo) => UnsavedTodo(
         id: todo.id,
         contents: todo.contents,
         deadline: todo.deadline,
@@ -24,6 +25,11 @@ class UnsavedTodo with _$UnsavedTodo {
   const UnsavedTodo._();
 
   bool get isValid => failureOrContents.isRight && failureOrDeadline.isRight;
+
+  String? get errorMessage => failureOrContents.fold(
+        (failure) => failure.message,
+        (_) => null,
+      );
 
   Either<ValueFailure, String> get failureOrContents {
     if (contents.isEmpty) {

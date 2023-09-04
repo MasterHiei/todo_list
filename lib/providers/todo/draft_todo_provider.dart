@@ -1,22 +1,21 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../entities/unsaved_todo.dart';
+import '../../models/entities/unsaved_todo.dart';
 import '../../services/todos_service.dart';
-import '../incomplete_todos_provider.dart';
 
-part 'todo_provider.g.dart';
+part 'draft_todo_provider.g.dart';
 
 @riverpod
-class Todo extends _$Todo {
+class DraftTodo extends _$DraftTodo {
   @override
   UnsavedTodo build(UnsavedTodo initialValue) => initialValue;
 
-  TodosService get _service => ref.watch(todosServiceProvider.notifier);
+  TodosService get _service => ref.watch(todosServiceProvider);
 
   void onContentsChanged(String contents) =>
       state = state.copyWith(contents: contents);
 
-  void selectDeadline(DateTime? deadline) {
+  void setDeadline(DateTime? deadline) {
     if (deadline == null) {
       return;
     }
@@ -28,7 +27,5 @@ class Todo extends _$Todo {
       return;
     }
     await _service.insertOrUpdate(state.toCollection());
-
-    ref.invalidate(incompleteTodosProvider);
   }
 }

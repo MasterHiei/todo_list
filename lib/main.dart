@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import 'pages/todo_home_page.dart';
+import 'core/router/index.dart';
 import 'services/clients/isar_provider.dart';
 
 void main() async {
@@ -14,7 +14,7 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
-        await isarOverride(),
+        await overrideIsar(),
       ],
       child: const TodoApp(),
     ),
@@ -26,14 +26,18 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routeInformationProvider: router.routeInformationProvider,
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
       title: 'Todo list',
       theme: ThemeData.light(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ja', 'JP')],
-      home: const TodoHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
