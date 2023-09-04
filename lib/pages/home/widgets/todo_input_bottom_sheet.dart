@@ -4,7 +4,7 @@ import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:dartx/dartx.dart';
 
 import '../../../core/extensions/date_time_format.dart';
-import '../../../entities/unsaved_todo.dart';
+import '../../../models/entities/unsaved_todo.dart';
 import '../../../providers/todo/draft_todo_provider.dart';
 
 class TodoInputBottomSheet extends ConsumerStatefulWidget {

@@ -3,14 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/extensions/date_time_format.dart';
 import '../../../models/entities/saved_todo.dart';
-import '../../../models/entities/unsaved_todo.dart';
 import '../../../providers/todo/payload_todo_provider.dart';
 import '../../../providers/todos/todos_batch_delete_provider.dart';
 import '../../widgets/index.dart';
-import 'index.dart';
 
-class TodoListItemView extends ConsumerWidget {
-  const TodoListItemView(this.data, {super.key});
+class TodoArchivesItemView extends ConsumerWidget {
+  const TodoArchivesItemView(this.data, {super.key});
 
   final SavedTodo data;
 
@@ -46,9 +44,6 @@ class TodoListItemView extends ConsumerWidget {
       },
       onDismissed: (direction) {
         switch (direction) {
-          case DismissDirection.endToStart:
-            _complete(ref);
-
           case DismissDirection.startToEnd:
             _delete(ref);
 
@@ -58,7 +53,7 @@ class TodoListItemView extends ConsumerWidget {
       },
       direction: ref.watch(batchDeleteEnabledProvider)
           ? DismissDirection.none
-          : DismissDirection.horizontal,
+          : DismissDirection.startToEnd,
       child: _buildItem(context),
     );
   }
@@ -81,9 +76,9 @@ class TodoListItemView extends ConsumerWidget {
               : null,
           title: Text(data.contents),
           subtitle: Text(data.deadline.toMMMEdHmString()),
-          onTap: () => ref.watch(batchDeleteEnabledProvider)
-              ? ref.read(todosBatchDeleteProvider.notifier).check(data.id)
-              : _showModifyBottomSheet(context),
+          onTap: ref.watch(batchDeleteEnabledProvider)
+              ? () => ref.read(todosBatchDeleteProvider.notifier).check(data.id)
+              : null,
           onLongPress: ref.watch(batchDeleteEnabledProvider)
               ? null
               : ref.read(todosBatchDeleteProvider.notifier).enable,
@@ -95,19 +90,6 @@ class TodoListItemView extends ConsumerWidget {
         context: context,
         builder: (_) => const TodoConfirmDeleteBottomSheet(),
       );
-
-  Future<void> _showModifyBottomSheet(BuildContext context) =>
-      showModalBottomSheet(
-        context: context,
-        builder: (_) => TodoInputBottomSheet(
-          initialData: UnsavedTodo.from(data),
-        ),
-        isScrollControlled: true,
-        isDismissible: false,
-      );
-
-  Future<void> _complete(WidgetRef ref) =>
-      ref.read(_payloadTodoProvider.notifier).complete();
 
   Future<void> _delete(WidgetRef ref) =>
       ref.read(_payloadTodoProvider.notifier).delete();

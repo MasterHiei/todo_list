@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../entities/unsaved_todo.dart';
+import '../../models/entities/unsaved_todo.dart';
 import '../../services/todos_service.dart';
 
 part 'draft_todo_provider.g.dart';

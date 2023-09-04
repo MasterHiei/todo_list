@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
 import '../collections/todo.dart';
-import '../core/failures/value_failure.dart';
+import '../../core/failures/value_failure.dart';
 import 'saved_todo.dart';
 
 part 'unsaved_todo.freezed.dart';

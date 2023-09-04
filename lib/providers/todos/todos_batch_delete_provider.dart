@@ -6,6 +6,12 @@ import 'states/todos_batch_delete_state.dart';
 
 part 'todos_batch_delete_provider.g.dart';
 
+final batchDeleteEnabledProvider = Provider.autoDispose(
+  (ref) => ref.watch(
+    todosBatchDeleteProvider.select((state) => state.enabled),
+  ),
+);
+
 @riverpod
 class TodosBatchDelete extends _$TodosBatchDelete {
   @override

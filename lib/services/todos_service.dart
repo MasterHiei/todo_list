@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../collections/todo.dart';
+import '../models/collections/todo.dart';
 import 'clients/isar_provider.dart';
 
 part 'todos_service.g.dart';
